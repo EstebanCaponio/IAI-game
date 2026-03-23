@@ -105,8 +105,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
         setSelectedIds((prev) => {
             if (prev.includes(id)) {
                 if (id === currentUser.id && isEditing) {
-                    // In modifica, non permettere di deselezionare il leader
-                    return prev;
+                    return prev; //cannot remove current user if editing, must always be leader
                 }
                 return prev.filter((item) => item !== id);
             }
@@ -132,7 +131,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
         }
 
         if (isEditing && editingTeam) {
-            // Modifica squadra esistente
+            // modifiy
             const updatedTeam: Team = {
                 ...editingTeam,
                 name: teamName.trim(),
@@ -155,7 +154,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
                 })
             );
         } else {
-            // Crea nuova squadra
+            // create new team
             const nextId = teams.length > 0 ? Math.max(...teams.map((team) => team.id)) + 1 : 1;
 
             const newTeam: Team = {

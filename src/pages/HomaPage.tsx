@@ -9,14 +9,11 @@ import CreatePage from "./CreatePage";
 import { user as currentUser } from "../data/currentUser";
 import UserTeamCard from "../components/UserTeamCard";
 
-// Funzione per aggiornare i rank di tutti i team
 const updateTeamRanks = (teams: Team[]): Team[] => {
   return [...teams]
     .sort((a, b) => b.totalScore - a.totalScore)
     .map((team, index) => ({ ...team, rank: index + 1 }));
 };
-
-// const { teams } = generateRandomData();
 
 const useStyles = makeStyles({
   page: {
