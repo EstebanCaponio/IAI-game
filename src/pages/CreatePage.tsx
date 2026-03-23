@@ -11,6 +11,8 @@ interface CreatePageProps {
     setMembers: React.Dispatch<React.SetStateAction<Member[]>>;
     currentUser: Member;
     onBack: () => void;
+    editingTeam?: Team;
+    updateTeamRanks: (teams: Team[]) => Team[];
 }
 
 const useStyles = makeStyles({
@@ -46,6 +48,7 @@ const useStyles = makeStyles({
         overflowY: "auto",
         border: "1px solid rgba(0,0,0,0.08)",
         borderRadius: tokens.borderRadiusMedium,
+        marginTop: "15px",
     },
     stickyHeader: {
         display: "flex",
@@ -64,13 +67,15 @@ const useStyles = makeStyles({
     },
 });
 
-export default function CreatePage({ teams, setTeams, members, setMembers, availableMembers, currentUser, onBack }: CreatePageProps) {
+export default function CreatePage({ teams, setTeams, members, setMembers, availableMembers, currentUser, onBack, editingTeam, updateTeamRanks }: CreatePageProps) {
     const styles = useStyles();
-    const [teamName, setTeamName] = useState("");
-    const [teamImage, setTeamImage] = useState("");
+    const [teamName, setTeamName] = useState(editingTeam?.name || "");
+    const [teamImage, setTeamImage] = useState(editingTeam?.image || "");
     const [search, setSearch] = useState("");
-    const [selectedIds, setSelectedIds] = useState<number[]>([currentUser.id]);
+    const [selectedIds, setSelectedIds] = useState<number[]>(editingTeam ? editingTeam.members.map(m => m.id) : [currentUser.id]);
     const [errorMessage, setErrorMessage] = useState<string>("");
+
+    const isEditing = Boolean(editingTeam);
 
     const filteredAvailable = useMemo(() => {
         const term = search.trim().toLowerCase();
@@ -93,16 +98,20 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
         .reduce((sum, member) => sum + member.score, 0);
 
     function toggleMember(id: number) {
-        if (id === currentUser.id) {
+        if (id === currentUser.id && !isEditing) {
             return;
         }
 
         setSelectedIds((prev) => {
             if (prev.includes(id)) {
+                if (id === currentUser.id && isEditing) {
+                    // In modifica, non permettere di deselezionare il leader
+                    return prev;
+                }
                 return prev.filter((item) => item !== id);
             }
             if (prev.length >= 5) {
-                setErrorMessage("Numero massimo di membri raggiunto (5, leader incluso)");
+                setErrorMessage("Numero massimo di membri raggiunto");
                 setTimeout(() => setErrorMessage(""), 3000);
                 return prev;
             }
@@ -122,24 +131,51 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
             return;
         }
 
-        const nextId = teams.length > 0 ? Math.max(...teams.map((team) => team.id)) + 1 : 1;
+        if (isEditing && editingTeam) {
+            // Modifica squadra esistente
+            const updatedTeam: Team = {
+                ...editingTeam,
+                name: teamName.trim(),
+                image: teamImage.trim() || undefined,
+                members: members.filter((member) => selectedIds.includes(member.id)),
+                totalScore,
+            };
 
-        const newTeam: Team = {
-            id: nextId,
-            name: teamName.trim(),
-            image: teamImage.trim() || undefined,
-            members: members.filter((member) => selectedIds.includes(member.id)),
-            leader: currentUser,
-            totalScore,
-            createdAt: new Date().toISOString().split("T")[0],
-        };
+            setTeams((prev) => updateTeamRanks(prev.map((team) => team.id === editingTeam.id ? updatedTeam : team)));
+            setMembers((prev) =>
+                prev.map((member) => {
+                    const wasInTeam = editingTeam.members.some(m => m.id === member.id);
+                    const isInTeam = selectedIds.includes(member.id);
+                    if (wasInTeam && !isInTeam) {
+                        return { ...member, teamId: null };
+                    } else if (!wasInTeam && isInTeam) {
+                        return { ...member, teamId: editingTeam.id };
+                    }
+                    return member;
+                })
+            );
+        } else {
+            // Crea nuova squadra
+            const nextId = teams.length > 0 ? Math.max(...teams.map((team) => team.id)) + 1 : 1;
 
-        setTeams((prev) => [...prev, newTeam]);
-        setMembers((prev) =>
-            prev.map((member) =>
-                selectedIds.includes(member.id) ? { ...member, teamId: newTeam.id } : member
-            )
-        );
+            const newTeam: Team = {
+                id: nextId,
+                name: teamName.trim(),
+                image: teamImage.trim() || undefined,
+                members: members.filter((member) => selectedIds.includes(member.id)),
+                leader: currentUser,
+                totalScore,
+                createdAt: new Date().toISOString().split("T")[0],
+                rank: 0 // temporary, will be updated by updateTeamRanks
+            };
+
+            setTeams((prev) => updateTeamRanks([...prev, newTeam]));
+            setMembers((prev) =>
+                prev.map((member) =>
+                    selectedIds.includes(member.id) ? { ...member, teamId: newTeam.id } : member
+                )
+            );
+        }
         //clear form and go back to home page
         setTeamName("");
         setTeamImage("");
@@ -164,7 +200,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
 
             <div className={styles.header}>
                 <div>
-                    <Title1>Crea Squadra</Title1> <br />
+                    <Title1>{isEditing ? "Modifica Squadra" : "Crea Squadra"}</Title1> <br />
                     <Body1>{todayName}, {today.toLocaleDateString('it-IT')}</Body1>
                 </div>
                 <Button onClick={onBack} appearance="primary" size="medium">
@@ -284,7 +320,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
                     Annulla
                 </Button>
                 <Button onClick={handleSave} appearance="primary">
-                    Salva Squadra
+                    {isEditing ? "Salva Modifiche" : "Salva Squadra"}
                 </Button>
             </div>
         </div>

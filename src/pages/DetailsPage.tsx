@@ -6,6 +6,7 @@ import UserGreeting from "../components/UserGreeting";
 interface DetailsPageProps {
     team: Team;
     onBack: () => void;
+    rank: number;
 }
 
 const useStyles = makeStyles({
@@ -65,11 +66,11 @@ const useStyles = makeStyles({
         alignItems: "center",
     },
     section: {
-    marginTop: "32px",
-  },
+        marginTop: "32px",
+    },
 });
 
-export default function DetailsPage({ team, onBack }: DetailsPageProps) {
+export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
 
     const styles = useStyles(); //fluentui hook for styles
     const teamInitial = team.name ? team.name.split(' ').map(word => word[0]).join('').toUpperCase() : "?"; // take initials of team name for avatar
@@ -99,7 +100,7 @@ export default function DetailsPage({ team, onBack }: DetailsPageProps) {
 
                     <div className={styles.infoColumn}>
                         <Body1>Rank</Body1>
-                        <Title2>{team.id}</Title2>
+                        <Title2>{rank}</Title2>
                     </div>
 
                     <div className={styles.columnDivider} />
@@ -157,7 +158,7 @@ export default function DetailsPage({ team, onBack }: DetailsPageProps) {
                                 {team.members.map((member, _) => (
                                     <TableRow key={member.id}>
                                         <TableCell>
-                                            <Avatar name={member.name} color="colorful"size={32} />
+                                            <Avatar name={member.name} color="colorful" size={32} />
                                         </TableCell>
                                         <TableCell>{member.name}</TableCell>
                                         <TableCell>{member.department}</TableCell>

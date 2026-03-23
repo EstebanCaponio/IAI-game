@@ -8,4 +8,5 @@ export interface Team {
   image?: string;
   totalScore: number;
   createdAt: string;
+  rank: number;
 };

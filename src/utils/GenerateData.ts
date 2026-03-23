@@ -10,9 +10,9 @@ export default function generateRandomData(this: any): { members: Member[], team
     // Generate 100 unique members
     for (let i = 1; i <= 100; i++) {
         // check if the current fullname already exists in the members array
-        const firstName:string = firstNames[Math.floor(Math.random() * firstNames.length)];
-        const lastName:string = lastNames[Math.floor(Math.random() * lastNames.length)];
-        const fullName:string = `${firstName} ${lastName}`;
+        const firstName: string = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName: string = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const fullName: string = `${firstName} ${lastName}`;
 
         if (usedNames.has(fullName)) {
             i--;
@@ -46,7 +46,7 @@ export default function generateRandomData(this: any): { members: Member[], team
 
     //generate 10 unique teams
     for (let j = 0; j < 10; j++) {
-        const teamName:string = teamNames[Math.floor(Math.random() * teamNames.length)];
+        const teamName: string = teamNames[Math.floor(Math.random() * teamNames.length)];
 
         if (usedTeams.has(teamName)) {
             j--;
@@ -55,7 +55,7 @@ export default function generateRandomData(this: any): { members: Member[], team
         usedTeams.add(teamName);
 
         //create team id and team members array
-        const teamId:number = j + 1;
+        const teamId: number = j + 1;
         const teamMembers: Member[] = [];
 
         // put 5 members in each team
@@ -67,7 +67,7 @@ export default function generateRandomData(this: any): { members: Member[], team
             }
         };
 
-        const totalScore:number = teamMembers.reduce((acc, member) => acc + member.score, 0);
+        const totalScore: number = teamMembers.reduce((acc, member) => acc + member.score, 0);
 
         const leader = teamMembers.length > 0
             ? teamMembers[Math.floor(Math.random() * teamMembers.length)]
@@ -79,13 +79,13 @@ export default function generateRandomData(this: any): { members: Member[], team
             members: teamMembers,
             leader,
             totalScore,
-            createdAt: new Date().toISOString().split('T')[0]
+            createdAt: new Date().toISOString().split('T')[0],
+            rank: 0 // temporary, will be updated by updateTeamRanks
         };
 
         if (teamMembers.length > 0) {
             teams.push(newTeam);
         } else {
-            // Non creare team vuoti, regola di consistenza
             usedTeams.delete(teamName);
             j--;
         }

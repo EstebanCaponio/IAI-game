@@ -78,7 +78,7 @@ export default function UserTeamCard({ userTeam, onDetailsClick, onEditClick }: 
 
                 <div className={styles.infoColumn}>
                     <Body1>Rank</Body1>
-                    <Title2>{userTeam.id}</Title2>
+                    <Title2>{userTeam.rank}</Title2>
                 </div>
 
                 <div className={styles.columnDivider} />

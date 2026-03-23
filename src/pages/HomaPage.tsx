@@ -9,6 +9,13 @@ import CreatePage from "./CreatePage";
 import { user as currentUser } from "../data/currentUser";
 import UserTeamCard from "../components/UserTeamCard";
 
+// Funzione per aggiornare i rank di tutti i team
+const updateTeamRanks = (teams: Team[]): Team[] => {
+  return [...teams]
+    .sort((a, b) => b.totalScore - a.totalScore)
+    .map((team, index) => ({ ...team, rank: index + 1 }));
+};
+
 // const { teams } = generateRandomData();
 
 const useStyles = makeStyles({
@@ -72,10 +79,11 @@ export default function HomePage() {
   const [teams, setTeams] = useState<Team[]>([]); // state for teams data
   const [members, setMembers] = useState<Member[]>([]); // state for members data
   const [showCreatePage, setShowCreatePage] = useState(false); // state for create page (toggle)
+  const [editingTeam, setEditingTeam] = useState<Team | null>(null); // state for editing team
 
   useEffect(() => {
     const { teams: generatedTeams, members: generatedMembers } = generateRandomData(); // generate random data on mount
-    setTeams(generatedTeams);
+    setTeams(updateTeamRanks(generatedTeams));
     setMembers([currentUser, ...generatedMembers]);
   }, []);
 
@@ -89,10 +97,10 @@ export default function HomePage() {
 
   // if a team is selected, show details page
   if (selectedTeam) {
-    return <DetailsPage team={selectedTeam} onBack={() => setSelectedTeam(null)} />;
+    return <DetailsPage team={selectedTeam} onBack={() => setSelectedTeam(null)} rank={selectedTeam.rank} />;
   }
   // if create page is selected, show create page
-  if (showCreatePage) {
+  if (showCreatePage || editingTeam) {
     return <CreatePage
       teams={teams}
       setTeams={setTeams}
@@ -100,7 +108,12 @@ export default function HomePage() {
       setMembers={setMembers}
       availableMembers={availableMembers}
       currentUser={currentUser}
-      onBack={() => setShowCreatePage(false)}
+      onBack={() => {
+        setShowCreatePage(false);
+        setEditingTeam(null);
+      }}
+      editingTeam={editingTeam || undefined}
+      updateTeamRanks={updateTeamRanks}
     />;
   }
 
@@ -113,7 +126,7 @@ export default function HomePage() {
         <UserTeamCard
           userTeam={userTeam}
           onDetailsClick={setSelectedTeam}
-          onEditClick={(team) => { console.log("Modifica squadra:", team) }}
+          onEditClick={setEditingTeam}
         />
       ) : (
         <Card className={styles.centeredCard} style={{ marginTop: '20px' }}>
