@@ -5,6 +5,9 @@ import DetailsPage from "./DetailsPage";
 import type { Team } from "../models/Team";
 import UserGreeting from "../components/UserGreeting";
 import type { Member } from "../models/Member";
+import CreatePage from "./CreatePage";
+import { user as currentUser } from "../data/currentUser";
+import UserTeamCard from "../components/UserTeamCard";
 
 // const { teams } = generateRandomData();
 
@@ -15,7 +18,7 @@ const useStyles = makeStyles({
     margin: "0 auto",
   },
   centeredCard: {
-    padding: "40px",
+    padding: "16px",
     marginTop: "20px",
     display: "flex",
     flexDirection: "column",
@@ -28,25 +31,77 @@ const useStyles = makeStyles({
   section: {
     marginTop: "32px",
   },
+  infoRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flex: 1,
+    width: "100%",
+    gap: "16px",
+    flexWrap: "wrap",
+  },
+  infoColumn: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    whiteSpace: "nowrap",
+    fontWeight: 600,
+  },
+  columnDivider: {
+    borderLeft: "1px solid rgba(0,0,0,0.2)",
+    height: "64px",
+  },
+  avatarSquare: {
+    width: "96px",
+    height: "96px",
+    borderRadius: "16px",
+    backgroundColor: "#304ffe",
+    color: "#fff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "32px",
+    fontWeight: 700,
+    textTransform: "uppercase",
+  },
 });
 
 export default function HomePage() {
   const styles = useStyles(); //fluentui hook for styles
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null); // state like routerDom
   const [teams, setTeams] = useState<Team[]>([]); // state for teams data
-  const [members, setMembers]= useState<Member[]>([]); // state for members data
+  const [members, setMembers] = useState<Member[]>([]); // state for members data
+  const [showCreatePage, setShowCreatePage] = useState(false); // state for create page (toggle)
 
   useEffect(() => {
-    const { teams, members } = generateRandomData(); // generate random data on mount
-    setTeams(teams);
-    setMembers(members);
+    const { teams: generatedTeams, members: generatedMembers } = generateRandomData(); // generate random data on mount
+    setTeams(generatedTeams);
+    setMembers([currentUser, ...generatedMembers]);
   }, []);
 
-  // sort teams by total score
-  const sortedTeams = [...teams].sort((a, b) => b.totalScore - a.totalScore);
+  const availableMembers = members.filter(m => m.teamId === null); // filter members without a team
+  const sortedTeams = [...teams].sort((a, b) => b.totalScore - a.totalScore); // sort teams by score
 
+  const userTeam = teams.find(
+    (team) => team.leader?.id === currentUser.id || team.members.some((m) => m.id === currentUser.id)
+  );
+  const hasTeam = Boolean(userTeam);
+
+  // if a team is selected, show details page
   if (selectedTeam) {
     return <DetailsPage team={selectedTeam} onBack={() => setSelectedTeam(null)} />;
+  }
+  // if create page is selected, show create page
+  if (showCreatePage) {
+    return <CreatePage
+      teams={teams}
+      setTeams={setTeams}
+      members={members}
+      setMembers={setMembers}
+      availableMembers={availableMembers}
+      currentUser={currentUser}
+      onBack={() => setShowCreatePage(false)}
+    />;
   }
 
   return (
@@ -54,10 +109,20 @@ export default function HomePage() {
 
       <UserGreeting />
 
-      <Card className={styles.centeredCard} style={{ marginTop: '20px' }}>
-        <Title1>Non hai ancora una squadra</Title1>
-        <Button appearance="primary" style={{ marginTop: '16px' }}>+ Crea la tua squadra</Button>
-      </Card>
+      {hasTeam && userTeam ? (
+        <UserTeamCard
+          userTeam={userTeam}
+          onDetailsClick={setSelectedTeam}
+          onEditClick={(team) => { console.log("Modifica squadra:", team) }}
+        />
+      ) : (
+        <Card className={styles.centeredCard} style={{ marginTop: '20px' }}>
+          <Title1>Non hai ancora una squadra</Title1>
+          <Button appearance="primary" style={{ marginTop: '16px' }} onClick={() => setShowCreatePage(true)}>
+            + Crea la tua squadra
+          </Button>
+        </Card>
+      )}
 
       <div className={styles.section}>
         <Title1>Classifica Globale</Title1><br />
