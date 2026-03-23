@@ -65,6 +65,24 @@ const useStyles = makeStyles({
         alignItems: "center",
         gap: "8px",
     },
+    deleteButton: {
+        backgroundColor: "#d13438",
+        color: "white",
+        border: "none",
+        padding: "8px 16px",
+        borderRadius: "4px",
+        cursor: "pointer",
+        fontWeight: 500,
+        fontSize: "14px",
+        "&:hover": {
+            backgroundColor: "#a4373a",
+            color: "white",
+        },
+        "&:active": {
+            backgroundColor: "#821d1f",
+            color: "white",
+        },
+    },
 });
 
 export default function CreatePage({ teams, setTeams, members, setMembers, availableMembers, currentUser, onBack, editingTeam, updateTeamRanks }: CreatePageProps) {
@@ -116,6 +134,27 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
             }
             return [...prev, id];
         });
+    }
+
+    function handleDelete() {
+        if (!editingTeam) return;
+
+        // remove team
+        setTeams((prev) => {
+            const updated = prev.filter((team) => team.id !== editingTeam.id);
+            return updateTeamRanks(updated);
+        });
+
+        // return members to available pool
+        setMembers((prev) =>
+            prev.map((member) =>
+                editingTeam.members.some(m => m.id === member.id)
+                    ? { ...member, teamId: null }
+                    : member
+            )
+        );
+
+        onBack();
     }
 
     function handleSave() {
@@ -315,12 +354,19 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
-                <Button onClick={onBack} appearance="secondary">
-                    Annulla
-                </Button>
-                <Button onClick={handleSave} appearance="primary">
-                    {isEditing ? "Salva Modifiche" : "Salva Squadra"}
-                </Button>
+                {isEditing && (
+                    <Button onClick={handleDelete} className={styles.deleteButton}>
+                        Elimina Squadra
+                    </Button>
+                )}
+                <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
+                    <Button onClick={onBack} appearance="secondary">
+                        Annulla
+                    </Button>
+                    <Button onClick={handleSave} appearance="primary">
+                        {isEditing ? "Salva Modifiche" : "Salva Squadra"}
+                    </Button>
+                </div>
             </div>
         </div>
     );
