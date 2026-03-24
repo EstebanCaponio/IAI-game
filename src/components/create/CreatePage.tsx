@@ -1,8 +1,8 @@
 import { Button, Card, Text, Input, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens, Title1, Body1, MessageBar, Title3 } from "@fluentui/react-components";
 import { Delete24Regular, Add24Filled, Subtract24Filled } from "@fluentui/react-icons";
 import { useMemo, useState } from "react";
-import type { Member } from "../models/Member";
-import type { Team } from "../models/Team";
+import type { Member } from "../../models/Member";
+import type { Team } from "../../models/Team";
 
 interface CreatePageProps {
     teams: Team[];

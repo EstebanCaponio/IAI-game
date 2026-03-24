@@ -1,6 +1,6 @@
 import { Card, makeStyles, Title2, Body1, Avatar, AvatarGroup, AvatarGroupItem, tokens, Button, Title1, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell } from "@fluentui/react-components";
-import type { Team } from "../models/Team";
-import UserGreeting from "../components/UserGreeting";
+import type { Team } from "../../models/Team";
+import UserGreeting from "../../commons/UserGreeting";
 
 // Create interface to destructure props
 interface DetailsPageProps {
