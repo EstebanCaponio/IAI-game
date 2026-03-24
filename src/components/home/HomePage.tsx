@@ -1,9 +1,10 @@
-import { Title1, Body1, makeStyles } from "@fluentui/react-components";
+import { Title1, Body1 } from "@fluentui/react-components";
 import type { Team } from "../../models/Team";
 import type { Member } from "../../models/Member";
 import UserTeamCard from "./homeComponents/UserTeamCard";
 import CreateTeamCard from "./homeComponents/CreateTeamCard";
 import TableGlobalRank from "./homeComponents/TableGlobalRank";
+import { useHomePageStyles } from "./HomePage.Styles";
 
 // props from MainPage
 interface HomePageProps {
@@ -14,13 +15,8 @@ interface HomePageProps {
   onDetailsClick: (team: Team) => void;
 }
 
-const useStyles = makeStyles({
-  page: { padding: 0, maxWidth: 'none', margin: 0 },
-  section: { marginTop: "32px" },
-});
-
 export default function HomePage({ teams, currentUser, onCreateClick, onEditClick, onDetailsClick }: HomePageProps) {
-  const styles = useStyles();
+  const styles = useHomePageStyles();
 
   // order teams by score for global ranking
   const sortedTeams = [...teams].sort((a, b) => b.totalScore - a.totalScore);

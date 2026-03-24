@@ -1,9 +1,15 @@
-import { Button, Card, Text, Input, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens, Title1, MessageBar, Title3 } from "@fluentui/react-components";
-import { Delete24Regular, Add24Filled, Subtract24Filled } from "@fluentui/react-icons";
+import { Card, Text, Input, Title1, Title3 } from "@fluentui/react-components";
 import { useMemo, useState } from "react";
 import type { Member } from "../../models/Member";
 import type { Team } from "../../models/Team";
 import BackButton from "../../commons/BackButton";
+import SearchFilters from "./createComponents/SearchFilters";
+import TableSelectMembers from "./createComponents/TableSelectMembers";
+import TableSelectedMembers from "./createComponents/TableSelectedMembers";
+import ErrorBanner from "./createComponents/ErrorBanner";
+import TeamStats from "./createComponents/TeamStats";
+import ActionButtons from "./createComponents/ActionButtons";
+import { useCreatePageStyles } from "./CreatePage.Styles";
 
 interface CreatePageProps {
     teams: Team[];
@@ -17,93 +23,9 @@ interface CreatePageProps {
     updateTeamRanks: (teams: Team[]) => Team[];
 }
 
-const useStyles = makeStyles({
-    page: {
-        padding: 0,
-        maxWidth: 'none',
-        margin: 0,
-        marginTop: "20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-    },
-    header: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "8px",
-    },
-    body: {
-        display: "grid",
-        gridTemplateColumns: "1.4fr 1fr",
-        gap: "20px",
-    },
-    card: {
-        padding: "16px",
-        borderRadius: tokens.borderRadiusMedium,
-    },
-    sectionTitle: {
-        marginBottom: "10px",
-        // fontWeight: 700,
-    },
-    list: {
-        maxHeight: "336px",
-        overflowY: "auto",
-        border: "1px solid rgba(0,0,0,0.08)",
-        borderRadius: tokens.borderRadiusMedium,
-        marginTop: "15px",
-    },
-    stickyHeader: {
-        display: "flex",
-        flexDirection: "column",
-    },
-    tableHeader: {
-        position: "sticky",
-        top: 0,
-        backgroundColor: "white",
-        zIndex: 1,
-    },
-    row: {
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-    },
-    btn: {
-        minWidth: "24px",
-        minHeight: "24px",
-        width: "24px",
-        height: "24px",
-        border: "none",
-        backgroundColor: "transparent",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        cursor: "pointer",
-        outline: "none",
-        padding: 0,
-    },
-    deleteButton: {
-        backgroundColor: "#d13438",
-        color: "white",
-        border: "none",
-        padding: "8px 16px",
-        borderRadius: "4px",
-        cursor: "pointer",
-        fontWeight: 500,
-        fontSize: "14px",
-        "&:hover": {
-            backgroundColor: "#a4373a",
-            color: "white",
-        },
-        "&:active": {
-            backgroundColor: "#821d1f",
-            color: "white",
-        },
-    },
-});
 
 export default function CreatePage({ teams, setTeams, members, setMembers, availableMembers, currentUser, onBack, editingTeam, updateTeamRanks }: CreatePageProps) {
-    const styles = useStyles();
+    const styles = useCreatePageStyles();
     const [teamName, setTeamName] = useState(editingTeam?.name || "");
     const [teamImage, setTeamImage] = useState(editingTeam?.image || "");
     const [nameFilter, setNameFilter] = useState("");
@@ -251,14 +173,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
 
     return (
         <div className={styles.page}>
-            {errorMessage && (
-                <MessageBar intent="error">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', width: '100%' }}>
-                        <span>{errorMessage}</span>
-                        <Button appearance="subtle" size="small" onClick={() => setErrorMessage("")}>Chiudi</Button>
-                    </div>
-                </MessageBar>
-            )}
+            <ErrorBanner errorMessage={errorMessage} onClose={() => setErrorMessage("")} />
 
             <div className={styles.header}>
                 <div>
@@ -286,143 +201,28 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
                     <div style={{ marginTop: "18px" }}>
                         <Title3 className={styles.sectionTitle}>Seleziona Membri</Title3>
                         <Text style={{ marginBottom: '8px', display: 'block' }}>Filtri ricerca</Text>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '10px' }}>
-                            <Input
-                                value={nameFilter}
-                                onChange={(event) => setNameFilter((event.target as HTMLInputElement).value)}
-                                placeholder="Nome"
-                            />
-                            <Input
-                                value={departmentFilter}
-                                onChange={(event) => setDepartmentFilter((event.target as HTMLInputElement).value)}
-                                placeholder="Dipartimento"
-                            />
-                            <Input
-                                value={countryFilter}
-                                onChange={(event) => setCountryFilter((event.target as HTMLInputElement).value)}
-                                placeholder="Nazione"
-                            />
-                        </div>
 
-                        <div className={styles.list}>
-                            <div className={styles.stickyHeader}>
-                                <Table>
-                                    <TableHeader className={styles.tableHeader}>
-                                        <TableRow>
-                                            <TableHeaderCell style={{ width: "50px" }}>Sel.</TableHeaderCell>
-                                            <TableHeaderCell>Nome</TableHeaderCell>
-                                            <TableHeaderCell>Dipartimento</TableHeaderCell>
-                                            <TableHeaderCell>Nazione</TableHeaderCell>
-                                            <TableHeaderCell style={{ width: "50px" }}>Punti</TableHeaderCell>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {filteredAvailable.map((member) => {
-                                            const isSelected = selectedIds.includes(member.id);
-                                            return (
-                                                <TableRow key={member.id} style={isSelected ? { backgroundColor: "#f4f4f4" } : undefined}>
-                                                    <TableCell>
-                                                        <button
-                                                            className={styles.btn}
-                                                            style={{ color: isSelected ? "#a80008" : "#0f7a0f" }}
-                                                            onClick={() => toggleMember(member.id)}
-                                                        >
-                                                            {isSelected ? <Subtract24Filled /> : <Add24Filled />}
-                                                        </button>
-                                                    </TableCell>
-                                                    <TableCell className={styles.row}>
-                                                        <Avatar name={member.name} color="colorful" size={20} />
-                                                        <Text>{member.name}</Text>
-                                                    </TableCell>
-                                                    <TableCell>{member.department}</TableCell>
-                                                    <TableCell>{member.country}</TableCell>
-                                                    <TableCell>{member.score}</TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                                    </TableBody>
-                                </Table>
-                            </div>
-                        </div>
+                        <SearchFilters nameFilter={nameFilter} setNameFilter={setNameFilter} departmentFilter={departmentFilter} setDepartmentFilter={setDepartmentFilter} countryFilter={countryFilter} setCountryFilter={setCountryFilter} />
+
+                        <TableSelectMembers filteredAvailable={filteredAvailable} selectedIds={selectedIds} toggleMember={toggleMember} />
                     </div>
                 </Card>
 
                 <Card className={styles.card}>
                     <Title3 className={styles.sectionTitle}>Statistiche Squadra:</Title3>
-                    <Text><strong>Punteggio totale:</strong> {totalScore} PT</Text>
-                    <Text><strong>Numero membri:</strong> {selectedIds.length} / 5</Text>
-                    <Text><strong>Leader:</strong> {currentUser.name}</Text>
+                    <TeamStats totalScore={totalScore} selectedCount={selectedIds.length} leaderName={currentUser.name} />
 
                     <Title3 style={{ marginTop: '12px' }}>Membri selezionati:</Title3>
-
-                    <div className={styles.list}>
-                        <div className={styles.stickyHeader}>
-                            <Table>
-                                <TableHeader className={styles.tableHeader}>
-                                    <TableRow>
-                                        <TableHeaderCell>Nome</TableHeaderCell>
-                                        <TableHeaderCell style={{ width: "50px" }}>Punti</TableHeaderCell>
-                                        <TableHeaderCell style={{ width: "70px" }}>Rimuovi</TableHeaderCell>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {selectedMembers.map((member) => (
-                                        <TableRow key={member.id}>
-                                            <TableCell className={styles.row}>
-                                                <Avatar name={member.name} color="colorful" size={24} />
-                                                <Text>{member.name}</Text>
-                                            </TableCell>
-                                            <TableCell>{member.score}</TableCell>
-                                            <TableCell>
-                                                {member.id === currentUser.id ? (
-                                                    <span style={{ color: "#999" }}>-</span>
-                                                ) : (
-                                                    <button
-                                                        style={{
-                                                            minWidth: "24px",
-                                                            minHeight: "24px",
-                                                            width: "24px",
-                                                            height: "24px",
-                                                            border: "none",
-                                                            backgroundColor: "transparent",
-                                                            color: "#d13438",
-                                                            cursor: "pointer",
-                                                            padding: 0,
-                                                            display: "flex",
-                                                            justifyContent: "center",
-                                                            alignItems: "center",
-                                                        }}
-                                                        onClick={() => toggleMember(member.id)}
-                                                        title="Rimuovi"
-                                                    >
-                                                        <Delete24Regular />
-                                                    </button>
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    </div>
+                    <TableSelectedMembers selectedMembers={selectedMembers} toggleMember={toggleMember} currentUser={currentUser} />
                 </Card>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
-                {isEditing && (
-                    <Button onClick={handleDelete} className={styles.deleteButton}>
-                        Elimina Squadra
-                    </Button>
-                )}
-                <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
-                    <Button onClick={onBack} appearance="secondary">
-                        Annulla
-                    </Button>
-                    <Button onClick={handleSave} appearance="primary">
-                        {isEditing ? "Salva Modifiche" : "Salva Squadra"}
-                    </Button>
-                </div>
-            </div>
+            <ActionButtons
+                isEditing={isEditing}
+                onDelete={handleDelete}
+                onBack={onBack}
+                onSave={handleSave}
+            />
         </div>
     );
 }

@@ -1,8 +1,9 @@
-import {  makeStyles,  Title1} from "@fluentui/react-components";
+import { Title1 } from "@fluentui/react-components";
 import type { Team } from "../../models/Team";
 import BackButton from "../../commons/BackButton";
 import DetailTeamCard from "./detailsComponents/DetailsTeamCard";
 import DetailMembersCard from "./detailsComponents/DetailsMembersCard";
+import { useDetailsPageStyles } from "./DetailsPage.Styles";
 
 // Create interface to destructure props
 interface DetailsPageProps {
@@ -11,26 +12,9 @@ interface DetailsPageProps {
     rank: number;
 }
 
-const useStyles = makeStyles({
-    page: {
-        padding: 0,
-        maxWidth: 'none',
-        margin: 0,
-    },
-    nav: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "20px",
-    },
-    section: {
-        marginTop: "32px",
-    },
-});
-
 export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
 
-    const styles = useStyles(); //fluentui hook for styles
+    const styles = useDetailsPageStyles(); //fluentui hook for styles
 
     return (
         <div className={styles.page}>
@@ -41,7 +25,7 @@ export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
                 <BackButton onBack={onBack} />
             </div>
 
-<DetailTeamCard team={team} rank={rank} />
+            <DetailTeamCard team={team} rank={rank} />
 
 
             <div className={styles.section}>
