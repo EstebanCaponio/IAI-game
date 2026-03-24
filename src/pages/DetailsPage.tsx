@@ -87,7 +87,7 @@ export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
 
             <Card className={styles.centeredCard}>
                 <Title2 style={{ borderBottom: '1px solid rgba(0,0,0,0.2)', paddingBottom: '8px' }}>
-                    Dettagli Squadra: {team.name}
+                    {team.name}
                 </Title2>
 
                 <div className={styles.infoRow}>
@@ -99,14 +99,14 @@ export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
                     )}
 
                     <div className={styles.infoColumn}>
-                        <Body1>Rank</Body1>
+                        <Body1>Posizione</Body1>
                         <Title2>{rank}</Title2>
                     </div>
 
                     <div className={styles.columnDivider} />
 
                     <div className={styles.infoColumn}>
-                        <Body1>Points</Body1>
+                        <Body1>Punti</Body1>
                         <Title2>{team.totalScore} PT</Title2>
                     </div>
 
@@ -120,7 +120,7 @@ export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
                     <div className={styles.columnDivider} />
 
                     <div className={styles.infoColumn}>
-                        <Body1>Creation Date</Body1>
+                        <Body1>Data Creazione</Body1>
                         <Title2>{new Date(team.createdAt).toLocaleDateString('it-IT')}</Title2>
                     </div>
 

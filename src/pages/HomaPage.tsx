@@ -1,4 +1,4 @@
-import { Card, Button, Title1, Body1, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens, AvatarGroup, AvatarGroupItem, AvatarGroupPopover, partitionAvatarGroupItems } from "@fluentui/react-components";
+import { Card, Button, Title1, Body1, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens} from "@fluentui/react-components";
 import generateRandomData from "../utils/GenerateData";
 import { useEffect, useState } from "react";
 import DetailsPage from "./DetailsPage";
@@ -153,11 +153,6 @@ export default function HomePage() {
 
               <TableBody>
                 {sortedTeams.map((team, index) => {
-                  // fluent rules for avatar group with max 3 items inline and the rest in popover
-                  const partitionedItems = partitionAvatarGroupItems({
-                    items: team.members,
-                    maxInlineItems: 3,
-                  });
 
                   return (
                     <TableRow key={team.id}>
@@ -170,20 +165,9 @@ export default function HomePage() {
 
                       <TableCell><strong>{team.totalScore} pt</strong></TableCell>
 
-                      <TableCell>
-                        <AvatarGroup layout="stack">
-                          {partitionedItems.inlineItems.map((member) => (
-                            <AvatarGroupItem name={member.name} key={member.id} />
-                          ))}
-
-                          {partitionedItems.overflowItems && partitionedItems.overflowItems.length > 0 && (
-                            <AvatarGroupPopover>
-                              {partitionedItems.overflowItems.map((member) => (
-                                <AvatarGroupItem name={member.name} key={member.id} />
-                              ))}
-                            </AvatarGroupPopover>
-                          )}
-                        </AvatarGroup>
+                      <TableCell style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Avatar name={team.leader?.name} color="colorful" size={24} />
+                        {team.leader?.name}
                       </TableCell>
 
                       <TableCell><Button onClick={() => setSelectedTeam(team)}>Dettagli</Button></TableCell>

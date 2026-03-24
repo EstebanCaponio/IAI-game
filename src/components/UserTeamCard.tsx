@@ -77,14 +77,14 @@ export default function UserTeamCard({ userTeam, onDetailsClick, onEditClick }: 
                 )}
 
                 <div className={styles.infoColumn}>
-                    <Body1>Rank</Body1>
-                    <Title2>{userTeam.rank}</Title2>
+                    <Body1>Posizione</Body1>
+                    <Title2>{userTeam.rank}°</Title2>
                 </div>
 
                 <div className={styles.columnDivider} />
 
                 <div className={styles.infoColumn}>
-                    <Body1>Points</Body1>
+                    <Body1>Punti</Body1>
                     <Title2>{userTeam.totalScore} PT</Title2>
                 </div>
 
@@ -98,7 +98,7 @@ export default function UserTeamCard({ userTeam, onDetailsClick, onEditClick }: 
                 <div className={styles.columnDivider} />
 
                 <div className={styles.infoColumn}>
-                    <Body1>Creation Date</Body1>
+                    <Body1>Data Creazione</Body1>
                     <Title2>{new Date(userTeam.createdAt).toLocaleDateString('it-IT')}</Title2>
                 </div>
 

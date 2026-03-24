@@ -1,4 +1,5 @@
-import { Button, Card, Text, Input, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens, Title1, Body1, MessageBar } from "@fluentui/react-components";
+import { Button, Card, Text, Input, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens, Title1, Body1, MessageBar, Title3 } from "@fluentui/react-components";
+import { Delete24Regular, Add24Filled, Subtract24Filled } from "@fluentui/react-icons";
 import { useMemo, useState } from "react";
 import type { Member } from "../models/Member";
 import type { Team } from "../models/Team";
@@ -41,7 +42,7 @@ const useStyles = makeStyles({
     },
     sectionTitle: {
         marginBottom: "10px",
-        fontWeight: 700,
+        // fontWeight: 700,
     },
     list: {
         maxHeight: "336px",
@@ -64,6 +65,20 @@ const useStyles = makeStyles({
         display: "flex",
         alignItems: "center",
         gap: "8px",
+    },
+    btn: {
+        minWidth: "24px",
+        minHeight: "24px",
+        width: "24px",
+        height: "24px",
+        border: "none",
+        backgroundColor: "transparent",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        cursor: "pointer",
+        outline: "none",
+        padding: 0,
     },
     deleteButton: {
         backgroundColor: "#d13438",
@@ -89,22 +104,33 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
     const styles = useStyles();
     const [teamName, setTeamName] = useState(editingTeam?.name || "");
     const [teamImage, setTeamImage] = useState(editingTeam?.image || "");
-    const [search, setSearch] = useState("");
+    const [nameFilter, setNameFilter] = useState("");
+    const [departmentFilter, setDepartmentFilter] = useState("");
+    const [countryFilter, setCountryFilter] = useState("");
     const [selectedIds, setSelectedIds] = useState<number[]>(editingTeam ? editingTeam.members.map(m => m.id) : [currentUser.id]);
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const isEditing = Boolean(editingTeam);
 
     const filteredAvailable = useMemo(() => {
-        const term = search.trim().toLowerCase();
+        const nameTerm = nameFilter.trim().toLowerCase();
+        const departmentTerm = departmentFilter.trim().toLowerCase();
+        const countryTerm = countryFilter.trim().toLowerCase();
+
         return availableMembers
-            .filter((member) => !selectedIds.includes(member.id))
-            .filter((member) =>
-                member.name.toLowerCase().includes(term) ||
-                member.department.toLowerCase().includes(term) ||
-                member.country.toLowerCase().includes(term)
-            );
-    }, [availableMembers, selectedIds, search]);
+            .filter((member) => member.id !== currentUser.id)
+            .filter((member) => {
+                const translatedName = member.name.toLowerCase();
+                const translatedDept = member.department.toLowerCase();
+                const translatedCountry = member.country.toLowerCase();
+
+                const matchesName = !nameTerm || translatedName.includes(nameTerm);
+                const matchesDept = !departmentTerm || translatedDept.includes(departmentTerm);
+                const matchesCountry = !countryTerm || translatedCountry.includes(countryTerm);
+
+                return matchesName && matchesDept && matchesCountry;
+            });
+    }, [availableMembers, selectedIds, nameFilter, departmentFilter, countryFilter]);
 
     const selectedMembers = useMemo(
         () => members.filter((member) => selectedIds.includes(member.id)).slice(0, 10),
@@ -248,12 +274,11 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
 
             <div className={styles.body}>
                 <Card className={styles.card}>
-                    <Text className={styles.sectionTitle}>Informazioni Squadra</Text>
                     <Text style={{ marginBottom: '8px', display: 'block' }}><strong>Nome squadra</strong> <span style={{ color: 'red' }}>*</span></Text>
                     <Input
                         value={teamName}
                         onChange={(event) => setTeamName((event.target as HTMLInputElement).value)}
-                        placeholder="Example: Team Alpha"
+                        placeholder="Esempio: Team Alpha"
                         style={{ marginBottom: '12px' }}
                     />
                     <Text style={{ marginBottom: '8px', display: 'block' }}>Immagine (URL)</Text>
@@ -264,13 +289,25 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
                     />
 
                     <div style={{ marginTop: "18px" }}>
-                        <Text weight="semibold" className={styles.sectionTitle}>Pool disponibili</Text>
-                        <Text style={{ marginBottom: '8px', display: 'block' }}>Ricerca membri</Text>
-                        <Input
-                            value={search}
-                            onChange={(event) => setSearch((event.target as HTMLInputElement).value)}
-                            placeholder="Nome, dipartimento, nazione"
-                        />
+                        <Title3 className={styles.sectionTitle}>Seleziona Membri</Title3>
+                        <Text style={{ marginBottom: '8px', display: 'block' }}>Filtri ricerca</Text>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+                            <Input
+                                value={nameFilter}
+                                onChange={(event) => setNameFilter((event.target as HTMLInputElement).value)}
+                                placeholder="Nome"
+                            />
+                            <Input
+                                value={departmentFilter}
+                                onChange={(event) => setDepartmentFilter((event.target as HTMLInputElement).value)}
+                                placeholder="Dipartimento"
+                            />
+                            <Input
+                                value={countryFilter}
+                                onChange={(event) => setCountryFilter((event.target as HTMLInputElement).value)}
+                                placeholder="Nazione"
+                            />
+                        </div>
 
                         <div className={styles.list}>
                             <div className={styles.stickyHeader}>
@@ -285,24 +322,29 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {filteredAvailable.map((member) => (
-                                            <TableRow key={member.id}>
-                                                <TableCell>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedIds.includes(member.id)}
-                                                        onChange={() => toggleMember(member.id)}
-                                                    />
-                                                </TableCell>
-                                                <TableCell className={styles.row}>
-                                                    <Avatar name={member.name} color="colorful" size={20} />
-                                                    <Text>{member.name}</Text>
-                                                </TableCell>
-                                                <TableCell>{member.department}</TableCell>
-                                                <TableCell>{member.country}</TableCell>
-                                                <TableCell>{member.score}</TableCell>
-                                            </TableRow>
-                                        ))}
+                                        {filteredAvailable.map((member) => {
+                                            const isSelected = selectedIds.includes(member.id);
+                                            return (
+                                                <TableRow key={member.id} style={isSelected ? { backgroundColor: "#f4f4f4" } : undefined}>
+                                                    <TableCell>
+                                                        <button
+                                                            className={styles.btn}
+                                                            style={{ color: isSelected ? "#a80008" : "#0f7a0f" }}
+                                                            onClick={() => toggleMember(member.id)}
+                                                        >
+                                                            {isSelected ? <Subtract24Filled /> : <Add24Filled />}
+                                                        </button>
+                                                    </TableCell>
+                                                    <TableCell className={styles.row}>
+                                                        <Avatar name={member.name} color="colorful" size={20} />
+                                                        <Text>{member.name}</Text>
+                                                    </TableCell>
+                                                    <TableCell>{member.department}</TableCell>
+                                                    <TableCell>{member.country}</TableCell>
+                                                    <TableCell>{member.score}</TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
                                     </TableBody>
                                 </Table>
                             </div>
@@ -311,39 +353,57 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
                 </Card>
 
                 <Card className={styles.card}>
-                    <Text className={styles.sectionTitle}>Statistiche Squadra</Text>
+                    <Title3 className={styles.sectionTitle}>Statistiche Squadra:</Title3>
                     <Text><strong>Punteggio totale:</strong> {totalScore} PT</Text>
                     <Text><strong>Numero membri:</strong> {selectedIds.length} / 5</Text>
                     <Text><strong>Leader:</strong> {currentUser.name}</Text>
 
-                    <Text weight="semibold" className={styles.sectionTitle} style={{ marginTop: '12px' }}>Membri selezionati</Text>
+                    <Title3 style={{ marginTop: '12px' }}>Membri selezionati:</Title3>
 
                     <div className={styles.list}>
                         <div className={styles.stickyHeader}>
                             <Table>
                                 <TableHeader className={styles.tableHeader}>
                                     <TableRow>
-                                        <TableHeaderCell style={{ width: "50px" }}>Rimuovi</TableHeaderCell>
                                         <TableHeaderCell>Nome</TableHeaderCell>
                                         <TableHeaderCell style={{ width: "50px" }}>Punti</TableHeaderCell>
+                                        <TableHeaderCell style={{ width: "70px" }}>Rimuovi</TableHeaderCell>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {selectedMembers.map((member) => (
                                         <TableRow key={member.id}>
-                                            <TableCell>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedIds.includes(member.id)}
-                                                    onChange={() => toggleMember(member.id)}
-                                                    disabled={member.id === currentUser.id}
-                                                />
-                                            </TableCell>
                                             <TableCell className={styles.row}>
                                                 <Avatar name={member.name} color="colorful" size={24} />
                                                 <Text>{member.name}</Text>
                                             </TableCell>
                                             <TableCell>{member.score}</TableCell>
+                                            <TableCell>
+                                                {member.id === currentUser.id ? (
+                                                    <span style={{ color: "#999" }}>-</span>
+                                                ) : (
+                                                    <button
+                                                        style={{
+                                                            minWidth: "24px",
+                                                            minHeight: "24px",
+                                                            width: "24px",
+                                                            height: "24px",
+                                                            border: "none",
+                                                            backgroundColor: "transparent",
+                                                            color: "#d13438",
+                                                            cursor: "pointer",
+                                                            padding: 0,
+                                                            display: "flex",
+                                                            justifyContent: "center",
+                                                            alignItems: "center",
+                                                        }}
+                                                        onClick={() => toggleMember(member.id)}
+                                                        title="Rimuovi"
+                                                    >
+                                                        <Delete24Regular />
+                                                    </button>
+                                                )}
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
