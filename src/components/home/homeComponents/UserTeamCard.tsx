@@ -1,7 +1,7 @@
 import {
     Card, Button, Title2, Body1, Avatar, AvatarGroup, AvatarGroupItem, makeStyles, tokens
 } from "@fluentui/react-components";
-import type { Team } from "../models/Team";
+import type { Team } from "../../../models/Team";
 
 interface UserTeamCardProps {
     userTeam: Team;

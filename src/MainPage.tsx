@@ -3,7 +3,7 @@ import generateRandomData from "./utils/GenerateData";
 import { user as currentUser } from "./data/currentUser";
 import type { Team } from "./models/Team";
 import type { Member } from "./models/Member";
-import HomePage from "./components/home/HomaPage";
+import HomePage from "./components/home/HomePage";
 import CreatePage from "./components/create/CreatePage";
 import DetailsPage from "./components/details/DetailsPage";
 import Header from "./commons/Header";
