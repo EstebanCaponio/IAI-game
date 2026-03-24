@@ -1,8 +1,9 @@
-import { Button, Card, Text, Input, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens, Title1, Body1, MessageBar, Title3 } from "@fluentui/react-components";
+import { Button, Card, Text, Input, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens, Title1, MessageBar, Title3 } from "@fluentui/react-components";
 import { Delete24Regular, Add24Filled, Subtract24Filled } from "@fluentui/react-icons";
 import { useMemo, useState } from "react";
 import type { Member } from "../../models/Member";
 import type { Team } from "../../models/Team";
+import BackButton from "../../commons/BackButton";
 
 interface CreatePageProps {
     teams: Team[];
@@ -18,9 +19,10 @@ interface CreatePageProps {
 
 const useStyles = makeStyles({
     page: {
-        padding: "20px",
-        maxWidth: "1200px",
-        margin: "0 auto",
+        padding: 0,
+        maxWidth: 'none',
+        margin: 0,
+        marginTop: "20px",
         display: "flex",
         flexDirection: "column",
         gap: "20px",
@@ -247,10 +249,6 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
         onBack();
     }
 
-    // get current date and day name
-    const today = new Date();
-    const todayName = today.toLocaleDateString('it-IT', { weekday: 'long' });
-
     return (
         <div className={styles.page}>
             {errorMessage && (
@@ -265,11 +263,8 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
             <div className={styles.header}>
                 <div>
                     <Title1>{isEditing ? "Modifica Squadra" : "Crea Squadra"}</Title1> <br />
-                    <Body1>{todayName}, {today.toLocaleDateString('it-IT')}</Body1>
                 </div>
-                <Button onClick={onBack} appearance="primary" size="medium">
-                    ← Torna alla Classifica
-                </Button>
+                <BackButton onBack={onBack} />
             </div>
 
             <div className={styles.body}>

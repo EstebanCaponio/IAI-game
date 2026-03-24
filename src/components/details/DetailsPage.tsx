@@ -1,6 +1,6 @@
-import { Card, makeStyles, Title2, Body1, Avatar, AvatarGroup, AvatarGroupItem, tokens, Button, Title1, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell } from "@fluentui/react-components";
+import { Card, makeStyles, Title2, Body1, Avatar, AvatarGroup, AvatarGroupItem, tokens, Title1, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell } from "@fluentui/react-components";
 import type { Team } from "../../models/Team";
-import UserGreeting from "../../commons/UserGreeting";
+import BackButton from "../../commons/BackButton";
 
 // Create interface to destructure props
 interface DetailsPageProps {
@@ -11,14 +11,15 @@ interface DetailsPageProps {
 
 const useStyles = makeStyles({
     page: {
-        padding: "20px",
-        maxWidth: "1200px",
-        margin: "0 auto",
+        padding: 0,
+        maxWidth: 'none',
+        margin: 0,
     },
     nav: {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        marginTop: "20px",
     },
     centeredCard: {
         marginTop: "20px",
@@ -79,10 +80,10 @@ export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
     return (
         <div className={styles.page}>
             <div className={styles.nav}>
-                <UserGreeting />
-                <Button onClick={onBack} appearance="primary" size="medium">
-                    ← Torna alla Classifica
-                </Button>
+                <div>
+                    <Title1>Dettagli Squadra</Title1> <br />
+                </div>
+                <BackButton onBack={onBack} />
             </div>
 
             <Card className={styles.centeredCard}>

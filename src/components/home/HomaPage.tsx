@@ -1,7 +1,6 @@
 import { Card, Button, Title1, Body1, Table, TableHeader, TableRow, TableHeaderCell, TableBody, TableCell, makeStyles, Avatar, tokens } from "@fluentui/react-components";
 import type { Team } from "../../models/Team";
 import type { Member } from "../../models/Member";
-import UserGreeting from "../../commons/UserGreeting";
 import UserTeamCard from "../../commons/UserTeamCard";
 
 // Nuove props per la HomePage
@@ -14,7 +13,7 @@ interface HomePageProps {
 }
 
 const useStyles = makeStyles({
-  page: { padding: "20px", maxWidth: "1200px", margin: "0 auto" },
+  page: { padding: 0, maxWidth: 'none', margin: 0 },
   centeredCard: {
     padding: "16px", marginTop: "20px", display: "flex", flexDirection: "column",
     alignItems: "center", justifyContent: "center", gap: tokens.spacingVerticalM,
@@ -36,7 +35,6 @@ export default function HomePage({ teams, currentUser, onCreateClick, onEditClic
 
   return (
     <div className={styles.page}>
-      <UserGreeting />
 
       {userTeam ? (
         <UserTeamCard
