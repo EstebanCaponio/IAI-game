@@ -1,5 +1,5 @@
 import { Body1, Title1 } from "@fluentui/react-components";
-import { user } from "../data/currentUser";
+import { user } from "../../data/currentUser";
 
 export default function Header() {
     // get current date and day name

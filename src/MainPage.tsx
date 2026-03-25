@@ -6,7 +6,7 @@ import type { Member } from "./models/Member";
 import HomePage from "./components/home/HomePage";
 import CreatePage from "./components/create/CreatePage";
 import DetailsPage from "./components/details/DetailsPage";
-import Header from "./commons/Header";
+import Header from "./components/header/Header";
 
 const updateTeamRanks = (teams: Team[]): Team[] => {
   return [...teams]
@@ -50,7 +50,7 @@ export default function App() {
     setSelectedTeam(team);
     setCurrentView("DETAILS");
   };
-// create function to update pagination
+  // create function to update pagination
   const renderContent = () => {
     switch (currentView) {
       case "DETAILS":
