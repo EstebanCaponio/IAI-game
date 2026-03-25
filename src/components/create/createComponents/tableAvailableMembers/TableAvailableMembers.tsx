@@ -1,6 +1,6 @@
 import { Avatar, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, Text } from "@fluentui/react-components";
 import { Add24Filled, Subtract24Filled } from "@fluentui/react-icons";
-import type { Member } from "../../../models/Member";
+import type { Member } from "../../../../models/Member";
 import { useTableAvailableMembersStyles } from "./TableAvailableMembers.Styles";
 
 interface TableSelectMembersProps {
@@ -17,22 +17,21 @@ export default function TableSelectMembers({ filteredAvailable, selectedIds, tog
                 <Table>
                     <TableHeader className={styles.tableHeader}>
                         <TableRow>
-                            <TableHeaderCell style={{ width: "50px" }}>Sel.</TableHeaderCell>
+                            <TableHeaderCell className={styles.colWidth}>Sel.</TableHeaderCell>
                             <TableHeaderCell>Nome</TableHeaderCell>
                             <TableHeaderCell>Dipartimento</TableHeaderCell>
                             <TableHeaderCell>Nazione</TableHeaderCell>
-                            <TableHeaderCell style={{ width: "50px" }}>Punti</TableHeaderCell>
+                            <TableHeaderCell className={styles.colWidth}>Punti</TableHeaderCell>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {filteredAvailable.map((member) => {
                             const isSelected = selectedIds.includes(member.id);
                             return (
-                                <TableRow key={member.id} style={isSelected ? { backgroundColor: "#f4f4f4" } : undefined}>
+                                <TableRow key={member.id} className={isSelected ? styles.selectedRow : undefined}>
                                     <TableCell>
                                         <button
-                                            className={styles.btn}
-                                            style={{ color: isSelected ? "#a80008" : "#0f7a0f" }}
+                                            className={`${styles.btn} ${isSelected ? styles.btnActive : styles.btnInactive}`}
                                             onClick={() => toggleMember(member.id)}
                                         >
                                             {isSelected ? <Subtract24Filled /> : <Add24Filled />}

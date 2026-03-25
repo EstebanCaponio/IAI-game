@@ -1,9 +1,11 @@
 import { Avatar, Card, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow } from "@fluentui/react-components";
-import type { Team } from "../../../models/Team";
+import { useDetailMemberCardStyles } from "./DetailsMembersCard.Style";
+import type { Team } from "../../../../models/Team";
 
 export default function DetailMembersCard({ team}: { team: Team }) {
+    const styles=useDetailMemberCardStyles();
     return (
-          <Card style={{ marginTop: '16px' }}>
+          <Card className={styles.card}>
                             <div>
                                 <Table>
                                     <TableHeader>

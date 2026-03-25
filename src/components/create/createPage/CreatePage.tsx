@@ -1,15 +1,16 @@
-import { Card, Text, Input, Title1, Title3 } from "@fluentui/react-components";
+import { Card, Text, Input, Title3 } from "@fluentui/react-components";
 import { useMemo, useState } from "react";
-import type { Member } from "../../models/Member";
-import type { Team } from "../../models/Team";
-import BackButton from "../../commons/BackButton";
-import SearchFilters from "./createComponents/SearchFilters";
-import TableSelectMembers from "./createComponents/TableAvailableMembers";
-import TableSelectedMembers from "./createComponents/TableSelectedMembers";
-import ErrorBanner from "./createComponents/ErrorBanner";
-import TeamStats from "./createComponents/TeamStats";
-import ActionButtons from "./createComponents/ActionButtons";
+import type { Member } from "../../../models/Member";
+import type { Team } from "../../../models/Team";
+import BackButton from "../../../commons/BackButton";
+import SearchFilters from "../createComponents/searchFilters/SearchFilters";
+import TableSelectMembers from "../createComponents/tableAvailableMembers/TableAvailableMembers";
+import TableSelectedMembers from "../createComponents/tableSelectedMembers/TableSelectedMembers";
+import ErrorBanner from "../createComponents/errorBanner/ErrorBanner";
+import TeamStats from "../createComponents/teamStats/TeamStats";
+import ActionButtons from "../createComponents/actionButtons/ActionButtons";
 import { useCreatePageStyles } from "./CreatePage.Styles";
+import PageTitle from "../../../commons/PageTitle";
 
 interface CreatePageProps {
     teams: Team[];
@@ -177,19 +178,19 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
 
             <div className={styles.header}>
                 <div>
-                    <Title1>{isEditing ? "Modifica Squadra" : "Crea Squadra"}</Title1> <br />
+                    <PageTitle>{isEditing ? "Modifica Squadra" : "Crea Squadra"}</PageTitle> <br />
                 </div>
                 <BackButton onBack={onBack} />
             </div>
 
             <div className={styles.body}>
                 <Card className={styles.card}>
-                    <Text className={styles.inputText}><strong>Nome squadra</strong> <span style={{ color: 'red' }}>*</span></Text>
+                    <Text className={styles.inputText}><strong>Nome squadra</strong> <span className={styles.asterisk}>*</span></Text>
                     <Input
                         value={teamName}
                         onChange={(event) => setTeamName((event.target as HTMLInputElement).value)}
                         placeholder="Esempio: Team Alpha"
-                        style={{ marginBottom: '12px' }}
+                        className={styles.inputTeamName}
                     />
                     <Text className={styles.inputText}>Immagine (URL)</Text>
                     <Input
@@ -198,7 +199,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
                         placeholder="https://..."
                     />
 
-                    <div style={{ marginTop: "18px" }}>
+                    <div className={styles.filtersContainer}>
                         <Title3 className={styles.sectionTitle}>Seleziona Membri</Title3>
                         <Text className={styles.inputText}>Filtri ricerca</Text>
 
@@ -212,7 +213,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
                     <Title3 className={styles.sectionTitle}>Statistiche Squadra:</Title3>
                     <TeamStats totalScore={totalScore} selectedCount={selectedIds.length} leaderName={currentUser.name} />
 
-                    <Title3 style={{ marginTop: '12px' }}>Membri selezionati:</Title3>
+                    <Title3 className={styles.title}>Membri selezionati:</Title3>
                     <TableSelectedMembers selectedMembers={selectedMembers} toggleMember={toggleMember} currentUser={currentUser} />
                 </Card>
             </div>

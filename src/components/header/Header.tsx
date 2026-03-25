@@ -1,5 +1,6 @@
-import { Body1, Title1 } from "@fluentui/react-components";
+import { Body1 } from "@fluentui/react-components";
 import { user } from "../../data/currentUser";
+import PageTitle from "../../commons/PageTitle";
 
 export default function Header() {
     // get current date and day name
@@ -8,7 +9,7 @@ export default function Header() {
 
     return (
         <div>
-            <Title1>Benvenuto, {user.name}</Title1> <br />
+            <PageTitle>Benvenuto, {user.name}</PageTitle> <br />
             <Body1>{todayName}, {today.toLocaleDateString('it-IT')}</Body1>
         </div>
     )

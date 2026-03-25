@@ -3,10 +3,9 @@ import generateRandomData from "./utils/GenerateData";
 import { user as currentUser } from "./data/currentUser";
 import type { Team } from "./models/Team";
 import type { Member } from "./models/Member";
-import HomePage from "./components/home/HomePage";
-import CreatePage from "./components/create/CreatePage";
-import DetailsPage from "./components/details/DetailsPage";
-import Header from "./components/header/Header";
+import HomePage from "./components/home/HomePage/HomePage";
+import CreatePage from "./components/create/createPage/CreatePage";
+import DetailsPage from "./components/details/detailPage/DetailsPage";
 
 const updateTeamRanks = (teams: Team[]): Team[] => {
   return [...teams]
@@ -95,7 +94,6 @@ export default function App() {
 
   return (
     <div className="app-layout">
-      <Header />
       <div className="page-content">
         {renderContent()}
       </div>

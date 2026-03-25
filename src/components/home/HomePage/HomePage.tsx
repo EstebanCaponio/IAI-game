@@ -1,10 +1,12 @@
-import { Title1, Body1 } from "@fluentui/react-components";
-import type { Team } from "../../models/Team";
-import type { Member } from "../../models/Member";
-import UserTeamCard from "./homeComponents/UserTeamCard";
-import CreateTeamCard from "./homeComponents/CreateTeamCard";
-import TableGlobalRank from "./homeComponents/TableGlobalRank";
+import { Body1 } from "@fluentui/react-components";
+import type { Team } from "../../../models/Team";
+import type { Member } from "../../../models/Member";
+import UserTeamCard from "../homeComponents/UserTeamCard/UserTeamCard";
+import CreateTeamCard from "../homeComponents/CreateTeamCard/CreateTeamCard";
+import TableGlobalRank from "../homeComponents/TableGlobalRank/TableGlobalRank";
 import { useHomePageStyles } from "./HomePage.Styles";
+import Header from "../../header/Header";
+import PageTitle from "../../../commons/PageTitle";
 
 // props from MainPage
 interface HomePageProps {
@@ -28,7 +30,7 @@ export default function HomePage({ teams, currentUser, onCreateClick, onEditClic
 
   return (
     <div className={styles.page}>
-
+      <Header />
       {userTeam ? (
         <UserTeamCard
           userTeam={userTeam}
@@ -38,7 +40,7 @@ export default function HomePage({ teams, currentUser, onCreateClick, onEditClic
       ) : (<CreateTeamCard onCreateClick={onCreateClick} />)}
 
       <div className={styles.section}>
-        <Title1>Classifica Globale</Title1>
+        <PageTitle>Classifica Globale</PageTitle>
         <br />
         <Body1>{sortedTeams.length} Teams</Body1>
 

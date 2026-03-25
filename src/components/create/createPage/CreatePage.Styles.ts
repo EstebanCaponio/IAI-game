@@ -29,4 +29,8 @@ export const useCreatePageStyles = makeStyles({
     sectionTitle: {
         marginBottom: "10px",
     },
+    asterisk:{color: 'red' },
+    inputTeamName: { marginBottom: "12px" },
+    filtersContainer:{ marginTop: "18px" },
+    title:{ marginTop: '12px' }
 });

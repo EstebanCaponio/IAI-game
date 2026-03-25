@@ -1,6 +1,6 @@
 import { Avatar, Table, TableBody, TableCell, TableHeader, TableHeaderCell, TableRow, Text } from "@fluentui/react-components";
 import { Delete24Regular } from "@fluentui/react-icons";
-import type { Member } from "../../../models/Member";
+import type { Member } from "../../../../models/Member";
 import { useTableSelectedMembersStyles } from "./TableSelectedMembers.Styles";
 
 interface TableSelectedMembersProps {
@@ -19,8 +19,8 @@ export default function TableSelectedMembers({ selectedMembers, toggleMember, cu
                     <TableHeader>
                         <TableRow>
                             <TableHeaderCell>Nome</TableHeaderCell>
-                            <TableHeaderCell style={{ width: "50px" }}>Punti</TableHeaderCell>
-                            <TableHeaderCell style={{ width: "70px" }}>Rimuovi</TableHeaderCell>
+                            <TableHeaderCell className={styles.colWidth}>Punti</TableHeaderCell>
+                            <TableHeaderCell className={styles.colWidth}>Rimuovi</TableHeaderCell>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -33,7 +33,7 @@ export default function TableSelectedMembers({ selectedMembers, toggleMember, cu
                                 <TableCell>{member.score}</TableCell>
                                 <TableCell>
                                     {member.id === currentUser.id ? (
-                                        <span style={{ color: "#999" }}>-</span>
+                                        <span className={styles.none}>-</span>
                                     ) : (
                                         <button
                                             className={styles.trashBtn}

@@ -1,4 +1,5 @@
 import { Button, MessageBar } from "@fluentui/react-components";
+import { useErrorBannerStyles } from "./ErrorBanner.Styles";
 
 interface ErrorBannerProps {
     errorMessage: string;
@@ -6,11 +7,12 @@ interface ErrorBannerProps {
 }
 
 export default function ErrorBanner({ errorMessage, onClose }: ErrorBannerProps) {
+    const styles=useErrorBannerStyles();
     if (!errorMessage) return null;
 
     return (
         <MessageBar intent="error">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', width: '100%' }}>
+            <div className={styles.bannerContainer}>
                 <span>{errorMessage}</span>
                 <Button appearance="subtle" size="small" onClick={onClose}>Chiudi</Button>
             </div>

@@ -1,6 +1,6 @@
 import { makeStyles, tokens } from "@fluentui/react-components";
 
-export const useTableAvailableMembersStyles = makeStyles({
+export const useTableSelectedMembersStyles = makeStyles({
     list: {
         maxHeight: "336px",
         overflowY: "auto",
@@ -8,33 +8,25 @@ export const useTableAvailableMembersStyles = makeStyles({
         borderRadius: tokens.borderRadiusMedium,
         marginTop: "15px",
     },
-    stickyHeader: {
-        display: "flex",
-        flexDirection: "column",
-    },
-    tableHeader: {
-        position: "sticky",
-        top: 0,
-        backgroundColor: "white",
-        zIndex: 1,
-    },
+    colWidth: { width: "70px" },
     row: {
         display: "flex",
         alignItems: "center",
         gap: "8px",
     },
-    btn: {
+    trashBtn: {
         minWidth: "24px",
         minHeight: "24px",
         width: "24px",
         height: "24px",
         border: "none",
         backgroundColor: "transparent",
+        color: "#d13438",
+        cursor: "pointer",
+        padding: 0,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        cursor: "pointer",
-        outline: "none",
-        padding: 0,
-    }
+    },
+    none: { color: "#999" }
 });

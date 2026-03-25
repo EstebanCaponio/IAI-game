@@ -1,9 +1,10 @@
-import { Title1 } from "@fluentui/react-components";
-import type { Team } from "../../models/Team";
-import BackButton from "../../commons/BackButton";
-import DetailTeamCard from "./detailsComponents/DetailsTeamCard";
-import DetailMembersCard from "./detailsComponents/DetailsMembersCard";
+import BackButton from "../../../commons/BackButton";
+import DetailTeamCard from "../detailsComponents/detailsTeamCard/DetailsTeamCard";
+import DetailMembersCard from "../detailsComponents/detailsMembersCard/DetailsMembersCard";
 import { useDetailsPageStyles } from "./DetailsPage.Styles";
+import type { Team } from "../../../models/Team";
+import { Title2 } from "@fluentui/react-components";
+import PageTitle from "../../../commons/PageTitle";
 
 // Create interface to destructure props
 interface DetailsPageProps {
@@ -20,7 +21,7 @@ export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
         <div className={styles.page}>
             <div className={styles.nav}>
                 <div>
-                    <Title1>Dettagli Squadra</Title1> <br />
+                    <PageTitle>Dettagli Squadra</PageTitle> <br />
                 </div>
                 <BackButton onBack={onBack} />
             </div>
@@ -29,7 +30,7 @@ export default function DetailsPage({ team, onBack, rank }: DetailsPageProps) {
 
 
             <div className={styles.section}>
-                <Title1>Elenco Membri</Title1><br />
+                <Title2>Elenco Membri</Title2><br />
 
                 <DetailMembersCard team={team} />
             </div>

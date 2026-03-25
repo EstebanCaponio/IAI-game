@@ -1,6 +1,6 @@
 import { makeStyles, tokens } from "@fluentui/react-components";
 
-export const useUserTeamCardStyles = makeStyles({
+export const useTeamCardStyles = makeStyles({
     centeredCard: {
         padding: "16px",
         marginTop: "20px",
@@ -46,5 +46,5 @@ export const useUserTeamCardStyles = makeStyles({
         fontWeight: 700,
         textTransform: "uppercase",
     },
-    btnContainer:{ display: 'flex', gap: '10px', marginTop: '14px' }
+    btnContainer: { display: 'flex', gap: '10px', marginTop: '14px' }
 });

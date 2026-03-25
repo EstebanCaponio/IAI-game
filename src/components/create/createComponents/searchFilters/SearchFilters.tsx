@@ -1,4 +1,5 @@
 import { Input } from "@fluentui/react-components";
+import { useSearchFiltersStyles } from "./SearchFilters.Style";
 
 interface SearchFiltersProps {
     nameFilter: string;
@@ -17,8 +18,9 @@ export default function SearchFilters({
     countryFilter,
     setCountryFilter
 }: SearchFiltersProps) {
+    const styles=useSearchFiltersStyles();
     return (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '10px' }}>
+        <div className={styles.container}>
             <Input
                 value={nameFilter}
                 onChange={(event) => setNameFilter((event.target as HTMLInputElement).value)}
