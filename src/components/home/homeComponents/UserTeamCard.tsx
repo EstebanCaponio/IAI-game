@@ -1,7 +1,6 @@
-import {
-    Card, Button, Title2, Body1, Avatar, AvatarGroup, AvatarGroupItem, makeStyles, tokens
-} from "@fluentui/react-components";
+import { Card, Button, Title2, Body1, Avatar, AvatarGroup, AvatarGroupItem } from "@fluentui/react-components";
 import type { Team } from "../../../models/Team";
+import { useUserTeamCardStyles } from "./UserTeamCard.Style";
 
 interface UserTeamCardProps {
     userTeam: Team;
@@ -9,55 +8,8 @@ interface UserTeamCardProps {
     onEditClick: (team: Team) => void;
 }
 
-const useStyles = makeStyles({
-    centeredCard: {
-        padding: "16px",
-        marginTop: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: tokens.spacingVerticalM,
-        border: `1px solid rgba(0,0,0,0.1)`,
-        borderRadius: tokens.borderRadiusMedium,
-    },
-    infoRow: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flex: 1,
-        width: "100%",
-        gap: "16px",
-        flexWrap: "wrap",
-    },
-    infoColumn: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        whiteSpace: "nowrap",
-        fontWeight: 600,
-    },
-    columnDivider: {
-        borderLeft: "1px solid rgba(0,0,0,0.2)",
-        height: "64px",
-    },
-    avatarSquare: {
-        width: "96px",
-        height: "96px",
-        borderRadius: "16px",
-        backgroundColor: "#304ffe",
-        color: "#fff",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "32px",
-        fontWeight: 700,
-        textTransform: "uppercase",
-    },
-});
-
 export default function UserTeamCard({ userTeam, onDetailsClick, onEditClick }: UserTeamCardProps) {
-    const styles = useStyles();
+    const styles = useUserTeamCardStyles();
 
     const teamInitial = userTeam.name
         ? userTeam.name.split(" ").map((word) => word[0]).join("").toUpperCase()
@@ -65,7 +17,7 @@ export default function UserTeamCard({ userTeam, onDetailsClick, onEditClick }: 
 
     return (
         <Card className={styles.centeredCard}>
-            <Title2 style={{ borderBottom: '1px solid rgba(0,0,0,0.2)', paddingBottom: '8px', textAlign: 'left', alignSelf: 'flex-start' }}>
+            <Title2 className={styles.title}>
                 La tua Squadra: {userTeam.name}
             </Title2>
 
@@ -112,7 +64,7 @@ export default function UserTeamCard({ userTeam, onDetailsClick, onEditClick }: 
                 </AvatarGroup>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', marginTop: '14px' }}>
+            <div className={styles.btnContainer}>
                 <Button onClick={() => onDetailsClick(userTeam)}>Dettagli</Button>
                 <Button appearance="secondary" onClick={() => onEditClick(userTeam)}>Modifica</Button>
             </div>

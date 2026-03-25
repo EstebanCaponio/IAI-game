@@ -25,6 +25,7 @@ export const useCreatePageStyles = makeStyles({
         padding: "16px",
         borderRadius: tokens.borderRadiusMedium,
     },
+    inputText:{ marginBottom: '8px', display: 'block' },
     sectionTitle: {
         marginBottom: "10px",
     },

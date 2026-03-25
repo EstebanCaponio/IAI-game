@@ -1,4 +1,5 @@
 import { Button } from "@fluentui/react-components";
+import { useActionButtonsStyles } from "./ActionButtons.Style";
 
 interface ActionButtonsProps {
     isEditing: boolean;
@@ -8,15 +9,16 @@ interface ActionButtonsProps {
 }
 
 export default function ActionButtons({ isEditing, onDelete, onBack, onSave }: ActionButtonsProps) {
+    const styles = useActionButtonsStyles();
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+        <div className={styles.containerBtn}>
             {isEditing && onDelete ? (
-                <Button onClick={onDelete} appearance="primary" style={{ backgroundColor: '#d13438', borderColor: '#d13438' }}>
+                <Button onClick={onDelete} appearance="primary" className={styles.deleteBtn}>
                     Elimina Squadra
                 </Button>
             ) : <div />}
 
-            <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
+            <div className={styles.backSaveBtnContainer}>
                 <Button onClick={onBack} appearance="secondary">Annulla</Button>
                 <Button onClick={onSave} appearance="primary">{isEditing ? 'Salva Modifiche' : 'Salva Squadra'}</Button>
             </div>

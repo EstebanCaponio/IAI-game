@@ -4,7 +4,7 @@ import type { Member } from "../../models/Member";
 import type { Team } from "../../models/Team";
 import BackButton from "../../commons/BackButton";
 import SearchFilters from "./createComponents/SearchFilters";
-import TableSelectMembers from "./createComponents/TableSelectMembers";
+import TableSelectMembers from "./createComponents/TableAvailableMembers";
 import TableSelectedMembers from "./createComponents/TableSelectedMembers";
 import ErrorBanner from "./createComponents/ErrorBanner";
 import TeamStats from "./createComponents/TeamStats";
@@ -184,14 +184,14 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
 
             <div className={styles.body}>
                 <Card className={styles.card}>
-                    <Text style={{ marginBottom: '8px', display: 'block' }}><strong>Nome squadra</strong> <span style={{ color: 'red' }}>*</span></Text>
+                    <Text className={styles.inputText}><strong>Nome squadra</strong> <span style={{ color: 'red' }}>*</span></Text>
                     <Input
                         value={teamName}
                         onChange={(event) => setTeamName((event.target as HTMLInputElement).value)}
                         placeholder="Esempio: Team Alpha"
                         style={{ marginBottom: '12px' }}
                     />
-                    <Text style={{ marginBottom: '8px', display: 'block' }}>Immagine (URL)</Text>
+                    <Text className={styles.inputText}>Immagine (URL)</Text>
                     <Input
                         value={teamImage}
                         onChange={(event) => setTeamImage((event.target as HTMLInputElement).value)}
@@ -200,7 +200,7 @@ export default function CreatePage({ teams, setTeams, members, setMembers, avail
 
                     <div style={{ marginTop: "18px" }}>
                         <Title3 className={styles.sectionTitle}>Seleziona Membri</Title3>
-                        <Text style={{ marginBottom: '8px', display: 'block' }}>Filtri ricerca</Text>
+                        <Text className={styles.inputText}>Filtri ricerca</Text>
 
                         <SearchFilters nameFilter={nameFilter} setNameFilter={setNameFilter} departmentFilter={departmentFilter} setDepartmentFilter={setDepartmentFilter} countryFilter={countryFilter} setCountryFilter={setCountryFilter} />
 
